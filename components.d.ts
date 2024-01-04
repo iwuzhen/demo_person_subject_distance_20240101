@@ -7,10 +7,21 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    CareerSubjectCombineCharts: typeof import('./src/components/echarts/CareerSubjectCombineCharts.vue')['default']
+    NCard: typeof import('naive-ui')['NCard']
+    NCheckbox: typeof import('naive-ui')['NCheckbox']
+    NCheckboxGroup: typeof import('naive-ui')['NCheckboxGroup']
+    NDivider: typeof import('naive-ui')['NDivider']
+    NMenu: typeof import('naive-ui')['NMenu']
+    NSpace: typeof import('naive-ui')['NSpace']
+    NSplit: typeof import('naive-ui')['NSplit']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TheCounter: typeof import('./src/components/TheCounter.vue')['default']
     TheFooter: typeof import('./src/components/TheFooter.vue')['default']
+    TheHeader: typeof import('./src/components/TheHeader.vue')['default']
     TheInput: typeof import('./src/components/TheInput.vue')['default']
+    TheLinerChart: typeof import('./src/components/echarts/TheLinerChart.vue')['default']
+    TheRadarChart: typeof import('./src/components/echarts/TheRadarChart.vue')['default']
   }
 }
