@@ -9,7 +9,7 @@ const menuOptions: MenuOption[] = [
         'a',
         {
           href: '/',
-          target: '_blank',
+          // target: '_blank',
           rel: 'noopenner noreferrer',
         },
         '职业和各艺术的距离',
@@ -22,8 +22,8 @@ const menuOptions: MenuOption[] = [
       h(
         'a',
         {
-          href: '/',
-          target: '_blank',
+          href: '/person',
+          // target: '_blank',
           rel: 'noopenner noreferrer',
         },
         '个人和各艺术的距离(待计算)',

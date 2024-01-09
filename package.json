@@ -14,7 +14,9 @@
   },
   "dependencies": {
     "@vueuse/core": "^10.7.0",
+    "alova": "^2.16.2",
     "echarts": "^5.4.3",
+    "fuse.js": "^7.0.0",
     "vue": "^3.3.10",
     "vue-echarts": "^6.6.8",
     "vue-router": "^4.2.5"

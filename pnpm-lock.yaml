@@ -8,9 +8,15 @@ dependencies:
   '@vueuse/core':
     specifier: ^10.7.0
     version: 10.7.0(vue@3.3.10)
+  alova:
+    specifier: ^2.16.2
+    version: 2.16.2
   echarts:
     specifier: ^5.4.3
     version: 5.4.3
+  fuse.js:
+    specifier: ^7.0.0
+    version: 7.0.0
   vue:
     specifier: ^3.3.10
     version: 3.3.10(typescript@5.3.3)
@@ -2369,6 +2375,11 @@ packages:
       uri-js: 4.4.1
     dev: true
 
+  /alova@2.16.2:
+    resolution: {integrity: sha512-x3E+f3DzjSAh+X6dgELO2YsmkIett1r8qDZTTk2B+wgqzi/CWEeVQroyWS/LAL7EPzE2/B2Iks/ZRGkCl3Okbw==}
+    engines: {node: '>= 0.12.0'}
+    dev: false
+
   /ansi-escapes@6.2.0:
     resolution: {integrity: sha512-kzRaCqXnpzWs+3z5ABPQiVke+iq0KXkHo8xiWV4RPTi5Yli0l97BEQuhXV1s7+aSU/fu1kUuxgS4MsQ0fRuygw==}
     engines: {node: '>=14.16'}
@@ -3704,6 +3715,11 @@ packages:
   /function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
     dev: true
+
+  /fuse.js@7.0.0:
+    resolution: {integrity: sha512-14F4hBIxqKvD4Zz/XjDc3y94mNZN6pRv3U13Udo0lNLCWRBUsrMv2xwcF/y/Z5sV6+FQW+/ow68cHpm4sunt8Q==}
+    engines: {node: '>=10'}
+    dev: false
 
   /gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
