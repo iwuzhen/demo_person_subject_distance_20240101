@@ -5,5 +5,6 @@ defineOptions({
 </script>
 
 <template>
+  <ThePersonSearch />
   <ThePersonRank />
 </template>

@@ -50,7 +50,7 @@ onSuccess(({ data }) => {
     })
   })
 
-  // 生成本eplmn
+  // 生成整个 table 数据
   tableData.value = cache_data
   // console.log('tableData.value', tableData.value)
 })
@@ -76,7 +76,7 @@ const columns: DataTableColumns<RowData> = [
     // maxWidth: 80,
     fixed: 'left',
     render(row: any) {
-      return h('a', { href: `https://en.wikipedia.org/wiki/${row.title.replace(' ', '_')}`, target: '_blank' }, {
+      return h('a', { href: `/personID/${row.id}`, class: 'cool-link' }, {
         default: () => row.title,
       })
     },
@@ -127,3 +127,42 @@ const columns: DataTableColumns<RowData> = [
     </n-gi>
   </n-grid>
 </template>
+
+<style>
+a.cool-link {
+  display: inline-block;
+  text-decoration: none;
+  color: #000;
+  padding: 10px 20px;
+  position: relative;
+  background-color: #fff;
+  border: 1px solid #fde400;
+  transition: all 0.3s ease;
+}
+
+a.cool-link::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+a.cool-link:hover {
+  color: #006eff;
+}
+
+a.cool-link:hover::before {
+  width: 100%;
+}
+
+a.cool-link:active {
+  background-color: #000;
+  color: #fff;
+  border-color: #fff;
+}
+</style>

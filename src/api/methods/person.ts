@@ -13,6 +13,6 @@ export function getPersonIndex() {
   })
 }
 // 获取用户信息
-export const getPersonData = (id: any) => userAlova.Get(`/person_data_${id}.json`)
+export const getPersonData = (id: any) => userAlova.Get<object>(`/person_data_${id}.json`)
 // 获取用户text
-export const getPersonText = (id: any) => userAlova.Get(`/person_text_${id}.json`)
+export const getPersonText = (id: any) => userAlova.Get<object>(`/person_text_${id}.json`)
