@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { useRequest, useWatcher } from 'alova'
-import { computed, watchEffect } from 'vue'
+import { useRequest } from 'alova'
 
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
@@ -12,7 +11,11 @@ import {
   TitleComponent,
   TooltipComponent,
 } from 'echarts/components'
-import { getPersonData, getPersonIndex, getPersonText } from '~/api/methods/person'
+import { getPersonData, getPersonIndex } from '~/api/methods/person'
+
+const props = defineProps<{
+  userInfoList: UserInterface[]
+}>()
 
 use([
   CanvasRenderer,
@@ -25,12 +28,15 @@ use([
 
 provide(THEME_KEY, isDark ? 'light' : 'night')
 
-const params = useRoute('/personID/[id]').params
-const UserInfo = ref({
-  id: '',
-  title: '',
-  career: [''],
-})
+interface UserInterface {
+  id: number
+  fid: number
+  title: string
+  career: string[]
+}
+
+const UserInfoList = ref<UserInterface[]>()
+
 const nameMap = new Map<string, number>()
 const nameMapReverse = new Map<number, string>()
 
@@ -38,31 +44,14 @@ const chartOption1: any = ref({})
 const chartOption2: any = ref({})
 
 const { onSuccess } = useRequest(getPersonIndex, { initialData: { namemap: {}, person: [] } })
-const {
-  data: textData,
-} = useWatcher(
-  // 必须设置为返回method实例的函数
-  () => getPersonText(UserInfo.value.fid),
-  // 被监听的状态数组，这些状态变化将会触发一次请求
-  [UserInfo],
-  {
-    // 手动设置immediate为true可以初始获取第1页数据
-    immediate: false,
-    initialData: { 1: 'hello' },
-  },
-)
 
 const {
-  data: personData,
-} = useWatcher(
+  send: sendList,
+} = useRequest(
   // 必须设置为返回method实例的函数
-  () => getPersonData(UserInfo.value.fid),
-  // 被监听的状态数组，这些状态变化将会触发一次请求
-  [UserInfo],
+  (fid: number) => getPersonData(fid),
   {
-    // 手动设置immediate为true可以初始获取第1页数据
     immediate: false,
-    initialData: { 1: 'hello' },
   },
 )
 
@@ -80,8 +69,8 @@ const radarChartOptionBaby = {
     orient: 'vertical',
     align: 'left',
     right: 20,
-    top: 'middle',
-    data: [],
+    top: 0,
+    // data: [],
   },
   tooltip: {
     trigger: 'item',
@@ -103,52 +92,63 @@ const radarChartOptionBaby = {
   options: [],
 }
 
-watchEffect(() => {
-  // 职业 id 0-5, 学科id 6-11
-  const dataObject = (personData as any).value[Number(UserInfo.value.id)]
+// 利用send函数返回的promise对象
+async function parallelRequest(userInfoList: UserInterface[]) {
+  const ps = []
+  for (const UserInfo of userInfoList)
+    ps.push(sendList(UserInfo.fid))
+
+  const responseList = await Promise.all(ps)
+  const mergeData = {}
+  for (const obj of responseList)
+    Object.assign(mergeData, obj)
   const careerIndex = [0, 1, 2, 3, 4, 5]
-  if (!dataObject)
-    return
   const careerName: any = []
   for (const project_id of careerIndex)
     careerName.push(nameMapReverse.get(project_id))
 
   const optionBaby = JSON.parse(JSON.stringify(radarChartOptionBaby))
-  optionBaby.title.text = `${UserInfo.value.title} 到各个职业的距离`
+  optionBaby.title.text = `距离各个职业`
   // optionBaby.legend.data = chartData.career_name
   optionBaby.radar.indicator = careerName.map((item: any) => {
     return {
       name: item,
-      // max: 0.8,
-      // min: 0.4,
     }
   })
 
   for (let start = yearStart; start <= yearEnd; start++) {
-    const resultCache: any = []
     const yearIndex = start - yearStart
-    for (const careerI of careerIndex)
-      resultCache.push(dataObject[careerI][yearIndex])
 
+    const dataList = []
+    for (const UserInfo of userInfoList) {
+      const dataObject = (mergeData as any)[Number(UserInfo.id)]
+      const resultCache: any = []
+      for (const careerI of careerIndex)
+        resultCache.push(dataObject[careerI][yearIndex])
+      dataList.push({
+        value: resultCache,
+        name: UserInfo.title,
+      })
+    }
     const seriesOption = {
       name: '距离图',
       type: 'radar',
-      data: [{
-        value: resultCache,
-        name: UserInfo.value.title,
-      }],
+      data: dataList,
     }
-    optionBaby.options.push({ title: { text: `${UserInfo.value.title} 到各个职业的距离:${start} 年` }, series: seriesOption })
+    optionBaby.options.push({ title: { text: `距离各个职业:${start} 年` }, series: seriesOption })
   }
   chartOption1.value = optionBaby
+
+  // 并行请求完成，继续处理业务...
+
   // subject
   const subjectIndex = [6, 7, 8, 9, 10, 11]
   const subjectName: any = []
   for (const project_id of subjectIndex)
     subjectName.push(nameMapReverse.get(project_id))
   const optionBaby2 = JSON.parse(JSON.stringify(radarChartOptionBaby))
-  optionBaby2.title.text = `${UserInfo.value.title} 到各个艺术的距离`
-  // optionBaby2.legend.data = chartData.subject_name
+  optionBaby2.title.text = `距离各个艺术`
+
   optionBaby2.radar.indicator = subjectName.map((item: any) => {
     return {
       name: item,
@@ -156,34 +156,31 @@ watchEffect(() => {
   })
 
   for (let start = yearStart; start <= yearEnd; start++) {
-    const resultCache: any = []
     const yearIndex = start - yearStart
-    for (const subjectI of subjectIndex) {
-      // 没有距离的置 0
-      resultCache.push(dataObject[subjectI]?.[yearIndex] ?? 0)
-    }
 
+    const dataList = []
+    for (const UserInfo of userInfoList) {
+      const dataObject = (mergeData as any)[Number(UserInfo.id)]
+
+      const resultCache: any = []
+      for (const subjectI of subjectIndex) {
+      // 没有距离的置 0
+        resultCache.push(dataObject[subjectI]?.[yearIndex] ?? 0)
+      }
+      dataList.push({
+        value: resultCache,
+        name: UserInfo.title,
+      })
+    }
     const seriesOption = {
       name: '距离图',
       type: 'radar',
-      data: [{
-        value: resultCache,
-        name: UserInfo.value.title,
-      }],
+      data: dataList,
     }
-    optionBaby2.options.push({ title: { text: `${UserInfo.value.title} 到各个艺术的距离:${start} 年` }, series: seriesOption })
+    optionBaby2.options.push({ title: { text: `距离各个艺术:${start} 年` }, series: seriesOption })
   }
   chartOption2.value = optionBaby2
-})
-
-const firstParagraph = computed({
-  get() {
-    if ((textData as any).value[Number(UserInfo.value.id)]?.length > 0)
-      return (textData as any).value[Number(UserInfo.value.id)].replace(/\[\d+\]/g, '').split('/n').slice(0)[0]
-    return 'aa'
-  },
-  set() {},
-})
+}
 
 onSuccess(({ data }: any) => {
   // console.log('onSuccess', data)
@@ -208,31 +205,22 @@ onSuccess(({ data }: any) => {
   }
 
   // 获取了基础数据，下面开始展示用户数据
-  const personIndex = personMap.get(Number(params.id))
-  if (personIndex) {
-    UserInfo.value = {
-      id: personIndex?.id,
-      fid: personIndex?.fid,
-      title: personIndex?.title,
-      career: personIndex?.career,
-    }
-  }
+  UserInfoList.value = props.userInfoList
+
+  parallelRequest(props.userInfoList)
 })
 </script>
 
 <template>
-  <a mb-10 mt-10 font-size-16 target="_blank" :href="`https://en.wikipedia.org/wiki/${UserInfo.title.replace(' ', '_')}`">
-    {{ UserInfo.title }}
-  </a>
   <div mt-10>
     <n-space>
-      <n-tag v-for="item in UserInfo.career" :key="`tag-${item.title}`" type="info">
-        {{ item }}
-      </n-tag>
+      <div v-for="UserInfo in UserInfoList" :key="`user-${UserInfo.id}`" ml-10>
+        {{ UserInfo.title }}:
+        <n-tag v-for="item in UserInfo.career" :key="`tag-${item}`" round type="info">
+          {{ item }}
+        </n-tag>
+      </div>
     </n-space>
-  </div>
-  <div mt-10 max-w-200>
-    {{ firstParagraph }}
   </div>
 
   <n-grid x-gap="12" :cols="2" mt-10>

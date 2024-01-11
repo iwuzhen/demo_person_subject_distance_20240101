@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { useRequest } from 'alova'
 import type { DataTableColumns } from 'naive-ui'
-import { NTag } from 'naive-ui'
+import { NButton, NTag, useMessage } from 'naive-ui'
 import { getPersonIndex } from '~/api/methods/person'
+import { useCharacterComparsionStore } from '~/stores/character-comparison'
+
+const store = useCharacterComparsionStore()
 
 const { onSuccess } = useRequest(getPersonIndex, { initialData: { namemap: {}, person: [] } })
 
@@ -56,10 +59,26 @@ onSuccess(({ data }) => {
 })
 
 interface RowData {
-  key: number
-  name: string
-  age: number
-  address: string
+  rank: number
+  id: number
+  fid: number
+  title: string
+  career: string[]
+}
+const message = useMessage()
+function setCompare(item: RowData) {
+  // console.log(item)
+  const [flag, msg] = store.add(item)
+  if (flag) {
+    message.info(`${item.title} 添加成功`, {
+      keepAliveOnHover: true,
+    })
+  }
+  else {
+    message.warning(`${item.title} ${msg}`, {
+      keepAliveOnHover: true,
+    })
+  }
 }
 
 const columns: DataTableColumns<RowData> = [
@@ -108,6 +127,25 @@ const columns: DataTableColumns<RowData> = [
     title: 'Distance',
     key: 'distance',
     width: 50,
+  },
+  {
+    title: '多人对比',
+    key: 'actions',
+    width: 50,
+    render(row) {
+      return h(
+        NButton,
+        {
+          strong: true,
+          tertiary: true,
+          secondary: true,
+          type: 'primary',
+          size: 'small',
+          onClick: () => setCompare(row),
+        },
+        { default: () => 'Add' },
+      )
+    },
   },
 ]
 </script>

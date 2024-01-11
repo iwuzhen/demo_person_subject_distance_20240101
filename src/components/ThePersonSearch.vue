@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { useRequest } from 'alova'
-import { NTag } from 'naive-ui'
+import { NButton, NTag, useMessage } from 'naive-ui'
 import Fuse from 'fuse.js'
 import type { DataTableColumns } from 'naive-ui'
 import { getPersonIndex } from '~/api/methods/person'
+import { useCharacterComparsionStore } from '~/stores/character-comparison'
 
 const { onSuccess } = useRequest(getPersonIndex, { initialData: { namemap: {}, person: [] } })
 
+const message = useMessage()
 const searchData = ref<any[]>([])
 const nameMap = new Map<string, number>()
 const nameMapReverse = new Map<number, string>()
@@ -44,6 +46,7 @@ function changeQuery(value: string) {
   for (const item of result) {
     cache.push({
       id: item.item.id,
+      fid: item.item.fid,
       title: item.item.title,
       career: item.item.career,
     })
@@ -52,8 +55,27 @@ function changeQuery(value: string) {
 }
 
 interface RowData {
-  name: string
-  career: number[]
+  rank: number
+  id: number
+  fid: number
+  title: string
+  career: string[]
+}
+
+const store = useCharacterComparsionStore()
+
+function setCompare(item: RowData) {
+  const [flag, msg] = store.add(item)
+  if (flag) {
+    message.info(`${item.title} 添加成功`, {
+      keepAliveOnHover: true,
+    })
+  }
+  else {
+    message.warning(`${item.title} ${msg}`, {
+      keepAliveOnHover: true,
+    })
+  }
 }
 
 const columns: DataTableColumns<RowData> = [
@@ -90,6 +112,25 @@ const columns: DataTableColumns<RowData> = [
         )
       })
       return tags
+    },
+  },
+  {
+    title: '多人对比',
+    key: 'actions',
+    width: 50,
+    render(row) {
+      return h(
+        NButton,
+        {
+          strong: true,
+          tertiary: true,
+          secondary: true,
+          type: 'primary',
+          size: 'small',
+          onClick: () => setCompare(row),
+        },
+        { default: () => 'Add' },
+      )
     },
   },
 ]
