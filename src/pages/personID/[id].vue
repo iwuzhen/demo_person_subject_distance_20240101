@@ -40,6 +40,7 @@ const chartOption2: any = ref({})
 const { onSuccess } = useRequest(getPersonIndex, { initialData: { namemap: {}, person: [] } })
 const {
   data: textData,
+  loading: textLoading,
 } = useWatcher(
   // 必须设置为返回method实例的函数
   () => getPersonText(UserInfo.value.fid),
@@ -54,6 +55,7 @@ const {
 
 const {
   data: personData,
+  loading: dataloading,
 } = useWatcher(
   // 必须设置为返回method实例的函数
   () => getPersonData(UserInfo.value.fid),
@@ -232,17 +234,27 @@ onSuccess(({ data }: any) => {
     </n-space>
   </div>
   <div mt-10 max-w-200>
-    {{ firstParagraph }}
+    <n-spin :show="textLoading">
+      {{ firstParagraph }}
+      <template #description>
+        加载中
+      </template>
+    </n-spin>
   </div>
 
-  <n-grid x-gap="12" :cols="2" mt-10>
-    <n-gi>
-      <VChart class="chart" :option="chartOption1" />
-    </n-gi>
-    <n-gi>
-      <VChart class="chart" :option="chartOption2" />
-    </n-gi>
-  </n-grid>
+  <n-spin :show="dataloading">
+    <n-grid x-gap="12" :cols="2" mt-10>
+      <n-gi>
+        <VChart class="chart" :option="chartOption1" />
+      </n-gi>
+      <n-gi>
+        <VChart class="chart" :option="chartOption2" />
+      </n-gi>
+    </n-grid>
+    <template #description>
+      加载中
+    </template>
+  </n-spin>
 </template>
 
 <style scoped>

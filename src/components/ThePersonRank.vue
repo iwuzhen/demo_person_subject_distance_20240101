@@ -7,7 +7,7 @@ import { useCharacterComparsionStore } from '~/stores/character-comparison'
 
 const store = useCharacterComparsionStore()
 
-const { onSuccess } = useRequest(getPersonIndex, { initialData: { namemap: {}, person: [] } })
+const { onSuccess, loading } = useRequest(getPersonIndex, { initialData: { namemap: {}, person: [] } })
 
 const nameMap = new Map<string, number>()
 const nameMapReverse = new Map<number, string>()
@@ -151,19 +151,24 @@ const columns: DataTableColumns<RowData> = [
 </script>
 
 <template>
-  <n-grid x-gap="12" :cols="2">
-    <n-gi v-for="({ title, data }) in tableData" :key="title">
-      <n-card :title="`${title} Top 100`">
-        <n-data-table
-          :columns="columns"
-          :data="data"
-          :max-height="250"
-          :scroll-x="400"
-          virtual-scroll
-        />
-      </n-card>
-    </n-gi>
-  </n-grid>
+  <n-spin :show="loading">
+    <n-grid x-gap="12" :cols="2">
+      <n-gi v-for="({ title, data }) in tableData" :key="title">
+        <n-card :title="`${title} Top 100`">
+          <n-data-table
+            :columns="columns"
+            :data="data"
+            :max-height="250"
+            :scroll-x="400"
+            virtual-scroll
+          />
+        </n-card>
+      </n-gi>
+    </n-grid>
+    <template #description>
+      加载中
+    </template>
+  </n-spin>
 </template>
 
 <style>

@@ -6,7 +6,7 @@ import type { DataTableColumns } from 'naive-ui'
 import { getPersonIndex } from '~/api/methods/person'
 import { useCharacterComparsionStore } from '~/stores/character-comparison'
 
-const { onSuccess } = useRequest(getPersonIndex, { initialData: { namemap: {}, person: [] } })
+const { onSuccess, loading } = useRequest(getPersonIndex, { initialData: { namemap: {}, person: [] } })
 
 const message = useMessage()
 const searchData = ref<any[]>([])
@@ -140,16 +140,21 @@ const pagination = {
 </script>
 
 <template>
-  <n-card title="搜索用户">
-    <n-input v-model:value="personQueryStr" type="text" placeholder="搜索用户" :on-input="changeQuery" max-w-100 />
+  <n-spin :show="loading">
+    <n-card title="搜索用户">
+      <n-input v-model:value="personQueryStr" type="text" placeholder="搜索用户" :on-input="changeQuery" max-w-100 />
 
-    <n-data-table
-      mt-10
-      :columns="columns"
-      :data="searchData"
-      :max-height="540"
-      :scroll-x="400"
-      :pagination="pagination"
-    />
-  </n-card>
+      <n-data-table
+        mt-10
+        :columns="columns"
+        :data="searchData"
+        :max-height="540"
+        :scroll-x="400"
+        :pagination="pagination"
+      />
+    </n-card>
+    <template #description>
+      加载中
+    </template>
+  </n-spin>
 </template>
