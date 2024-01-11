@@ -53,7 +53,7 @@ const option = computed(() => {
 
   const option = {
     title: {
-      text: '职业和学科之间的关系',
+      text: '职业和艺术之间的关系',
     },
     legend: {
       orient: 'vertical',
@@ -85,12 +85,12 @@ const option = computed(() => {
 </script>
 
 <template>
-  <n-card title="职业和艺术选择" mt-20>
+  <n-card title="职业群体和艺术选择" mt-20>
     <div>
-      选择职业和艺术，可以展示相关职业和艺术的 google 距离
+      选择职业群体和艺术，可以展示相关职业群体和艺术的 google 距离
     </div>
     <div mt-10>
-      选择学科
+      选择艺术
     </div>
     <n-checkbox-group v-model:value="subjectGroup">
       <n-space item-style="display: flex;">
@@ -99,7 +99,7 @@ const option = computed(() => {
     </n-checkbox-group>
 
     <div mt-20>
-      选择职业
+      选择职业群体
     </div>
     <n-checkbox-group v-model:value="careerGroup">
       <n-space item-style="display: flex;">

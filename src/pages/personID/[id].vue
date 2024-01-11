@@ -114,7 +114,7 @@ watchEffect(() => {
     careerName.push(nameMapReverse.get(project_id))
 
   const optionBaby = JSON.parse(JSON.stringify(radarChartOptionBaby))
-  optionBaby.title.text = `${UserInfo.value.title} 到各个职业的距离`
+  optionBaby.title.text = `${UserInfo.value.title} 到各个职业群体的距离`
   // optionBaby.legend.data = chartData.career_name
   optionBaby.radar.indicator = careerName.map((item: any) => {
     return {
@@ -138,7 +138,7 @@ watchEffect(() => {
         name: UserInfo.value.title,
       }],
     }
-    optionBaby.options.push({ title: { text: `${UserInfo.value.title} 到各个职业的距离:${start} 年` }, series: seriesOption })
+    optionBaby.options.push({ title: { text: `${UserInfo.value.title} 到各个职业群体的距离:${start} 年` }, series: seriesOption })
   }
   chartOption1.value = optionBaby
   // subject

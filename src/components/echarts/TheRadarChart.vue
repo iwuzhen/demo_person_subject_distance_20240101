@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 雷达图，加上时间轴的描绘职业和艺术之间的举例
+// 雷达图，加上时间轴的描绘职业群体和艺术之间的举例
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { RadarChart } from 'echarts/charts'
@@ -65,7 +65,7 @@ const optionBaby = {
   options: [],
 }
 if (props.showType === 'career') {
-  optionBaby.title.text = '职业到各个艺术的距离'
+  optionBaby.title.text = '职业群体到各个艺术的距离'
   optionBaby.legend.data = chartData.career_name
   optionBaby.radar.indicator = chartData.subject_name.map((item: any) => {
     return {
@@ -99,12 +99,12 @@ if (props.showType === 'career') {
         }
       }),
     }
-    optionBaby.options.push({ title: { text: `职业到各个艺术的距离:${start} 年` }, series: seriesOption })
+    optionBaby.options.push({ title: { text: `职业群体到各个艺术的距离:${start} 年` }, series: seriesOption })
   }
 }
 
 else if (props.showType === 'subject') {
-  optionBaby.title.text = '艺术到各个职业的距离'
+  optionBaby.title.text = '艺术到各个职业群体的距离'
   optionBaby.legend.data = chartData.subject_name
   optionBaby.radar.indicator = chartData.career_name.map((item: any) => {
     return {
@@ -137,7 +137,7 @@ else if (props.showType === 'subject') {
         }
       }),
     }
-    optionBaby.options.push({ title: { text: `艺术到各个职业的距离: ${start}年` }, series: seriesOption })
+    optionBaby.options.push({ title: { text: `艺术到各个职业群体的距离: ${start}年` }, series: seriesOption })
   }
 }
 

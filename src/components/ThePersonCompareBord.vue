@@ -108,7 +108,7 @@ async function parallelRequest(userInfoList: UserInterface[]) {
     careerName.push(nameMapReverse.get(project_id))
 
   const optionBaby = JSON.parse(JSON.stringify(radarChartOptionBaby))
-  optionBaby.title.text = `距离各个职业`
+  optionBaby.title.text = `距离各个职业群体`
   // optionBaby.legend.data = chartData.career_name
   optionBaby.radar.indicator = careerName.map((item: any) => {
     return {
