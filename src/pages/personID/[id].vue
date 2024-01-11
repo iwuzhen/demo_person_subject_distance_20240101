@@ -104,7 +104,7 @@ const radarChartOptionBaby = {
 }
 
 watchEffect(() => {
-  // 职业 id 0-5, 学科id 6-11
+  // 职业 id 0-5, 艺术id 6-11
   const dataObject = (personData as any).value[Number(UserInfo.value.id)]
   const careerIndex = [0, 1, 2, 3, 4, 5]
   if (!dataObject)
@@ -180,7 +180,7 @@ const firstParagraph = computed({
   get() {
     if ((textData as any).value[Number(UserInfo.value.id)]?.length > 0)
       return (textData as any).value[Number(UserInfo.value.id)].replace(/\[\d+\]/g, '').split('/n').slice(0)[0]
-    return 'aa'
+    return 'this is first paragraph'
   },
   set() {},
 })
