@@ -19,3 +19,10 @@ npx degit antfu/vitesse-lite my-vitesse-app
 cd my-vitesse-app
 pnpm i # If you don't have pnpm installed, run: npm install -g pnpm
 ```
+
+# transform data to project
+
+```
+scp ider@192.168.1.229:/home/ider/jupyter-data/personRelation/data/* /home/ider/workspace/demo_person_subject_distance_20240101/public/data/
+scp ider@192.168.1.229:/home/ider/jupyter-data/personRelation/data/subject_career.json /home/ider/workspace/demo_person_subject_distance_20240101/src/data
+```

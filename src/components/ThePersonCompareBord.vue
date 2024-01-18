@@ -12,6 +12,7 @@ import {
   TooltipComponent,
 } from 'echarts/components'
 import { getPersonData, getPersonIndex } from '~/api/methods/person'
+import chartData from '~/data/subject_career.json'
 
 const props = defineProps<{
   userInfoList: UserInterface[]
@@ -102,7 +103,9 @@ async function parallelRequest(userInfoList: UserInterface[]) {
   const mergeData = {}
   for (const obj of responseList)
     Object.assign(mergeData, obj)
-  const careerIndex = [0, 1, 2, 3, 4, 5]
+  // const careerIndex = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  const careerIndex = chartData.career_ids
+
   const careerName: any = []
   for (const project_id of careerIndex)
     careerName.push(nameMapReverse.get(project_id))
@@ -142,7 +145,9 @@ async function parallelRequest(userInfoList: UserInterface[]) {
   // 并行请求完成，继续处理业务...
 
   // subject
-  const subjectIndex = [6, 7, 8, 9, 10, 11]
+  // const subjectIndex = [12, 13, 14, 15, 16, 17]
+  const subjectIndex = chartData.subject_ids
+
   const subjectName: any = []
   for (const project_id of subjectIndex)
     subjectName.push(nameMapReverse.get(project_id))

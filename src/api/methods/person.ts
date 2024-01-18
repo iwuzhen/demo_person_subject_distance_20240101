@@ -14,5 +14,7 @@ export function getPersonIndex() {
 }
 // 获取用户信息
 export const getPersonData = (id: any) => userAlova.Get<object>(`/person_data_${id}.json`)
+// 获取用户图片
+export const getPersonImageData = (id: any) => userAlova.Get<object>(`/person_image_${id}.json`)
 // 获取用户text
 export const getPersonText = (id: any) => userAlova.Get<object>(`/person_text_${id}.json`)

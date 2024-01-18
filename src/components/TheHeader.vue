@@ -45,14 +45,12 @@ export default defineComponent({
 </script>
 
 <template>
-  <n-split :default-size="0.8">
-    <template #1>
-      <n-menu
-        v-model:value="activeKey"
-        mode="horizontal"
-        :options="menuOptions"
-        responsive
-      />
-    </template>
-  </n-split>
+  <n-flex>
+    <n-menu
+      v-model:value="activeKey"
+      mode="horizontal"
+      :options="menuOptions"
+      responsive
+    />
+  </n-flex>
 </template>

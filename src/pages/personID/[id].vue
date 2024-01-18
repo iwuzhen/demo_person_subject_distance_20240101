@@ -12,7 +12,8 @@ import {
   TitleComponent,
   TooltipComponent,
 } from 'echarts/components'
-import { getPersonData, getPersonIndex, getPersonText } from '~/api/methods/person'
+import { getPersonData, getPersonImageData, getPersonIndex, getPersonText } from '~/api/methods/person'
+import chartData from '~/data/subject_career.json'
 
 use([
   CanvasRenderer,
@@ -28,6 +29,7 @@ provide(THEME_KEY, isDark ? 'light' : 'night')
 const params = useRoute('/personID/[id]').params
 const UserInfo = ref({
   id: '',
+  fid: '',
   title: '',
   career: [''],
 })
@@ -67,6 +69,25 @@ const {
     initialData: { 1: 'hello' },
   },
 )
+
+const {
+  data: imageData,
+  loading: imageloading,
+} = useWatcher(
+  // 必须设置为返回method实例的函数
+  () => getPersonImageData(UserInfo.value.fid),
+  // 被监听的状态数组，这些状态变化将会触发一次请求
+  [UserInfo],
+  {
+    // 手动设置immediate为true可以初始获取第1页数据
+    immediate: false,
+    initialData: { 1: 'hello' },
+  },
+)
+
+const personImage = computed(() => {
+  return (imageData as any).value[Number(UserInfo.value.id)]
+})
 
 const yearStart = 2007
 const yearEnd = 2023
@@ -108,7 +129,9 @@ const radarChartOptionBaby = {
 watchEffect(() => {
   // 职业 id 0-5, 艺术id 6-11
   const dataObject = (personData as any).value[Number(UserInfo.value.id)]
-  const careerIndex = [0, 1, 2, 3, 4, 5]
+  // const careerIndex = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  const careerIndex = chartData.career_ids
+
   if (!dataObject)
     return
   const careerName: any = []
@@ -144,7 +167,9 @@ watchEffect(() => {
   }
   chartOption1.value = optionBaby
   // subject
-  const subjectIndex = [6, 7, 8, 9, 10, 11]
+  // const subjectIndex = [12, 13, 14, 15, 16, 17]
+  const subjectIndex = chartData.subject_ids
+
   const subjectName: any = []
   for (const project_id of subjectIndex)
     subjectName.push(nameMapReverse.get(project_id))
@@ -223,24 +248,29 @@ onSuccess(({ data }: any) => {
 </script>
 
 <template>
-  <a mb-10 mt-10 font-size-16 target="_blank" :href="`https://en.wikipedia.org/wiki/${UserInfo.title.replace(' ', '_')}`">
-    {{ UserInfo.title }}
-  </a>
-  <div mt-10>
-    <n-space>
-      <n-tag v-for="item in UserInfo.career" :key="`tag-${item.title}`" type="info">
-        {{ item }}
-      </n-tag>
-    </n-space>
-  </div>
-  <div mt-10 max-w-200>
-    <n-spin :show="textLoading">
-      {{ firstParagraph }}
-      <template #description>
-        加载中
-      </template>
-    </n-spin>
-  </div>
+  <n-flex justify="space-between">
+    <div>
+      <a mb-10 mt-10 font-size-16 target="_blank" :href="`https://en.wikipedia.org/wiki/${UserInfo.title.replace(' ', '_')}`">
+        {{ UserInfo.title }}
+      </a>
+      <div mt-10>
+        <n-space>
+          <n-tag v-for="item in UserInfo.career" :key="`tag-${item}`" type="info">
+            {{ item }}
+          </n-tag>
+        </n-space>
+      </div>
+      <div mt-10 max-w-200>
+        <n-spin :show="textLoading">
+          {{ firstParagraph }}
+          <template #description>
+            加载中
+          </template>
+        </n-spin>
+      </div>
+    </div>
+    <img :src="`//wsrv.nl/?url=https://${personImage}`">
+  </n-flex>
 
   <n-spin :show="dataloading">
     <n-grid x-gap="12" :cols="2" mt-10>

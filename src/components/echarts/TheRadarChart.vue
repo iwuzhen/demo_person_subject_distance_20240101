@@ -34,7 +34,7 @@ const yearRange = []
 for (let start = yearStart; start <= yearEnd; start++)
   yearRange.push(start)
 
-const optionBaby = {
+const optionBaby: any = {
   title: {
     text: '意外的chart',
   },
@@ -78,7 +78,7 @@ if (props.showType === 'career') {
   for (let start = yearStart; start <= yearEnd; start++) {
     // if (start === 2022)
     //   continue
-    const resultCache = {}
+    const resultCache: any = {}
     for (const careerName of chartData.career_name)
       resultCache[careerName] = []
 
@@ -116,7 +116,7 @@ else if (props.showType === 'subject') {
   for (let start = yearStart; start <= yearEnd; start++) {
     // if (start === 2022)
     //   continue
-    const resultCache = {}
+    const resultCache: any = {}
     for (const subjectName of chartData.subject_name)
       resultCache[subjectName] = []
 
