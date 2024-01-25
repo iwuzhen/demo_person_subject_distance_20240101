@@ -45,7 +45,7 @@ const option = computed(() => {
         name: key,
         type: 'line',
         // stack: 'Total',
-        data: chartData.data[key],
+        data: (chartData.data as any)[key],
       })
     }
   }

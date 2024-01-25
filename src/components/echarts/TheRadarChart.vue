@@ -47,6 +47,7 @@ const optionBaby: any = {
   },
   tooltip: {
     trigger: 'item',
+    order: 'valueDesc',
   },
   radar: {
     axisName: {
@@ -70,8 +71,8 @@ if (props.showType === 'career') {
   optionBaby.radar.indicator = chartData.subject_name.map((item: any) => {
     return {
       name: item,
-      max: 0.8,
-      min: 0.4,
+      max: 1.1,
+      min: 0.6,
     }
   })
 
@@ -86,7 +87,7 @@ if (props.showType === 'career') {
     for (const careerName of chartData.career_name) {
       for (const subjectName of chartData.subject_name) {
         const chartSourceKey = `${subjectName}_${careerName}`
-        resultCache[careerName].push(chartData.data[chartSourceKey][yearIndexx])
+        resultCache[careerName].push((chartData.data as any)[chartSourceKey][yearIndexx])
       }
     }
     const seriesOption = {
@@ -109,7 +110,7 @@ else if (props.showType === 'subject') {
   optionBaby.radar.indicator = chartData.career_name.map((item: any) => {
     return {
       name: item,
-      max: 1,
+      max: 1.1,
     }
   })
 
@@ -124,7 +125,7 @@ else if (props.showType === 'subject') {
     for (const subjectName of chartData.subject_name) {
       for (const careerName of chartData.career_name) {
         const chartSourceKey = `${subjectName}_${careerName}`
-        resultCache[subjectName].push(chartData.data[chartSourceKey][yearIndexx])
+        resultCache[subjectName].push((chartData.data as any)[chartSourceKey][yearIndexx])
       }
     }
     const seriesOption = {
