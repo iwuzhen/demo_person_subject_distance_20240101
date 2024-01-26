@@ -45,7 +45,7 @@ const option = computed(() => {
         name: key,
         type: 'line',
         // stack: 'Total',
-        data: (chartData.data as any)[key],
+        data: (chartData.data as any)[key].map((value: number) => value > 1 ? 1 : value),
       })
     }
   }
@@ -79,7 +79,6 @@ const option = computed(() => {
     },
     series,
   }
-
   return option
 })
 </script>

@@ -71,7 +71,7 @@ if (props.showType === 'career') {
   optionBaby.radar.indicator = chartData.subject_name.map((item: any) => {
     return {
       name: item,
-      max: 1.1,
+      max: 1,
       min: 0.6,
     }
   })
@@ -87,7 +87,10 @@ if (props.showType === 'career') {
     for (const careerName of chartData.career_name) {
       for (const subjectName of chartData.subject_name) {
         const chartSourceKey = `${subjectName}_${careerName}`
-        resultCache[careerName].push((chartData.data as any)[chartSourceKey][yearIndexx])
+
+        // const result: number[] = (chartData.data as any)[chartSourceKey][yearIndexx].map((value: number) => value > 1 ? 1 : value)
+        const value = (chartData.data as any)[chartSourceKey][yearIndexx] > 1 ? 1 : (chartData.data as any)[chartSourceKey][yearIndexx]
+        resultCache[careerName].push(value)
       }
     }
     const seriesOption = {
@@ -110,7 +113,7 @@ else if (props.showType === 'subject') {
   optionBaby.radar.indicator = chartData.career_name.map((item: any) => {
     return {
       name: item,
-      max: 1.1,
+      max: 1,
     }
   })
 
@@ -125,7 +128,9 @@ else if (props.showType === 'subject') {
     for (const subjectName of chartData.subject_name) {
       for (const careerName of chartData.career_name) {
         const chartSourceKey = `${subjectName}_${careerName}`
-        resultCache[subjectName].push((chartData.data as any)[chartSourceKey][yearIndexx])
+
+        const value = (chartData.data as any)[chartSourceKey][yearIndexx] > 1 ? 1 : (chartData.data as any)[chartSourceKey][yearIndexx]
+        resultCache[subjectName].push(value)
       }
     }
     const seriesOption = {
